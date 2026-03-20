@@ -145,7 +145,8 @@ button {
 
 .form-field__required,
 .form-field__error,
-.form-submit-error {
+.form-submit-error,
+.modal-error {
   color: #dc2626;
 }
 
@@ -196,6 +197,15 @@ button {
   cursor: not-allowed;
   opacity: 0.7;
   transform: none;
+}
+
+.button--secondary {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.button--secondary:hover {
+  background: #cbd5e1;
 }
 
 .radio-group {
@@ -392,6 +402,17 @@ button {
   gap: 16px;
 }
 
+.modal-form {
+  display: grid;
+  gap: 12px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
 .modal-empty {
   color: #475569;
 }
@@ -423,6 +444,27 @@ button {
   font-size: 14px;
 }
 
+.master-select__control {
+  min-height: 46px;
+  border-color: #cbd5e1 !important;
+  border-radius: 14px !important;
+  box-shadow: none !important;
+}
+
+.master-select__control--is-focused {
+  border-color: #2563eb !important;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12) !important;
+}
+
+.master-select__multi-value {
+  background: #dbeafe !important;
+  border-radius: 999px !important;
+}
+
+.master-select__placeholder {
+  color: #64748b !important;
+}
+
 @media (max-width: 640px) {
   .app-header__inner {
     flex-direction: column;
@@ -446,7 +488,8 @@ button {
     flex-direction: column;
   }
 
-  .modal__header {
+  .modal__header,
+  .modal-actions {
     align-items: flex-start;
     flex-direction: column;
   }

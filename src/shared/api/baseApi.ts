@@ -18,6 +18,6 @@ export const baseApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ['City'],
+  tagTypes: ['City', 'Master'],
   endpoints: () => ({}),
 });
