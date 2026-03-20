@@ -1,17 +1,17 @@
-﻿import { baseApi } from "../../../shared/api/baseApi"
+﻿import { baseApi } from '../../../shared/api/baseApi';
 
 export interface City {
-  id: number
-  title: string
+  id: number;
+  title: string;
 }
 
 export const cityApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getCities: builder.query<City[], void>({
-      query: () => "/api/city",
-      providesTags: ["City"],
+      query: () => '/api/city',
+      providesTags: ['City'],
     }),
   }),
-})
+});
 
-export const { useGetCitiesQuery } = cityApi
+export const { useGetCitiesQuery } = cityApi;

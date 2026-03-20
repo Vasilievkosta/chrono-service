@@ -10,6 +10,23 @@ export interface CreateOrderRequest {
   email: string;
 }
 
+export interface OrderItem {
+  id: number;
+  date: string;
+  time: string;
+  duration: number;
+  city: {
+    title: string;
+  };
+  master: {
+    name: string;
+  };
+  user: {
+    name: string;
+    email: string;
+  };
+}
+
 export const orderApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     createOrder: builder.mutation<unknown, CreateOrderRequest>({
@@ -19,7 +36,10 @@ export const orderApi = baseApi.injectEndpoints({
         body,
       }),
     }),
+    getOrders: builder.query<OrderItem[], void>({
+      query: () => '/api/order',
+    }),
   }),
 });
 
-export const { useCreateOrderMutation } = orderApi;
+export const { useCreateOrderMutation, useGetOrdersQuery } = orderApi;

@@ -1,28 +1,41 @@
-﻿import { baseApi } from "../../../shared/api/baseApi"
+﻿import { baseApi } from '../../../shared/api/baseApi';
 
 export interface MasterRequest {
-  cityId: string
-  date: string
-  time: string
-  duration: number
+  cityId: string;
+  date: string;
+  time: string;
+  duration: number;
 }
 
 export interface Master {
-  id: number
-  name: string
-  rating_id: number
+  id: number;
+  name: string;
+  rating_id: number;
+}
+
+export interface MasterOfCities {
+  master_id: number;
+  master_name: string;
+  master_rating: number;
+  cities: Array<{
+    id: number;
+    title: string;
+  }>;
 }
 
 export const masterApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAvailableMasters: builder.mutation<Master[], MasterRequest>({
       query: (body) => ({
-        url: "/api/master/datetime",
-        method: "POST",
+        url: '/api/master/datatime',
+        method: 'POST',
         body,
       }),
     }),
+    getMastersOfCities: builder.query<MasterOfCities[], void>({
+      query: () => '/api/master/ofcities',
+    }),
   }),
-})
+});
 
-export const { useGetAvailableMastersMutation } = masterApi
+export const { useGetAvailableMastersMutation, useGetMastersOfCitiesQuery } = masterApi;
