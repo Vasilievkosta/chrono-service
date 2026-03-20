@@ -17,6 +17,12 @@ function formatDate(value?: Date) {
   return value.toLocaleDateString('en-CA');
 }
 
+function getToday() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return today;
+}
+
 export function DatePickerField({
   value,
   onChange,
@@ -54,6 +60,7 @@ export function DatePickerField({
           <DayPicker
             mode="single"
             selected={value}
+            disabled={{ before: getToday() }}
             onSelect={(selectedDate) => {
               onChange(selectedDate);
               setIsOpen(false);
