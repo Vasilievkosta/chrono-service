@@ -57,8 +57,15 @@ button {
 }
 
 .app-brand {
-  font-size: 20px;
-  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+}
+
+.app-brand__image {
+  display: block;
+  width: 220px;
+  max-width: 100%;
+  height: auto;
 }
 
 .app-nav {
@@ -503,4 +510,5 @@ button {
     flex-direction: column;
   }
 }
+
 

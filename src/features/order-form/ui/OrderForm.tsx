@@ -8,6 +8,7 @@ import { useCreateOrderMutation } from '../../../entities/order/api/orderApi';
 import { Button } from '../../../shared/ui/Button';
 import { DatePickerField } from '../../../shared/ui/DatePickerField';
 import { FormField } from '../../../shared/ui/FormField';
+import { Modal } from '../../../shared/ui/Modal';
 import { RadioGroup } from '../../../shared/ui/RadioGroup';
 import { SelectField } from '../../../shared/ui/SelectField';
 import { TextInput } from '../../../shared/ui/TextInput';
@@ -30,6 +31,7 @@ const durationBySize: Record<(typeof watchSizes)[number], number> = {
 export function OrderForm() {
   const [masters, setMasters] = useState<Master[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [pendingValues, setPendingValues] = useState<OrderFormValues | null>(null);
   const [submitError, setSubmitError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -100,6 +102,7 @@ export function OrderForm() {
       setPendingValues(null);
       setMasters([]);
       setSuccessMessage('Заказ успешно создан.');
+      setIsSuccessModalOpen(true);
       reset({
         name: '',
         email: '',
@@ -108,7 +111,6 @@ export function OrderForm() {
         repairDate: undefined,
         repairTime: '',
       });
-      alert('Заказ успешно создан');
     } catch {
       setSubmitError('Не удалось создать заказ. Попробуйте позже.');
     }
@@ -122,6 +124,11 @@ export function OrderForm() {
     setIsModalOpen(false);
     setPendingValues(null);
     setMasters([]);
+  };
+
+  const handleCloseSuccessModal = () => {
+    setIsSuccessModalOpen(false);
+    setSuccessMessage('');
   };
 
   const cityErrorMessage = errors.city?.message ?? (isError ? 'Не удалось загрузить города' : undefined);
@@ -200,7 +207,6 @@ export function OrderForm() {
           </Button>
 
           {submitError ? <div className="form-submit-error">{submitError}</div> : null}
-          {successMessage ? <div className="form-submit-success">{successMessage}</div> : null}
         </form>
       </section>
 
@@ -211,6 +217,17 @@ export function OrderForm() {
         onClose={handleCloseModal}
         onSelect={handleSelectMaster}
       />
+
+      <Modal title="Успешно" isOpen={isSuccessModalOpen} onClose={handleCloseSuccessModal}>
+        <div className="modal-form">
+          <p>{successMessage}</p>
+          <div className="modal-actions">
+            <Button type="button" onClick={handleCloseSuccessModal}>
+              OK
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 }

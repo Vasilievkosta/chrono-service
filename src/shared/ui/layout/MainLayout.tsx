@@ -38,8 +38,12 @@ export function MainLayout() {
     <div className="app-shell">
       <header className="app-header">
         <div className="app-header__inner">
-          <Link to="/" className="app-brand">
-            Frontend App
+          <Link to="/" className="app-brand" aria-label="ChronoService home">
+            <img
+              className="app-brand__image"
+              src="/assets/branding/logo-chronoservice.png"
+              alt="ChronoService"
+            />
           </Link>
 
           <nav className="app-nav">
