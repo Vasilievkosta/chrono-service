@@ -1,10 +1,11 @@
-﻿import { useEffect, useState } from 'react';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+﻿import { useEffect, useMemo, useState } from 'react';
+import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import { clearAuth, isAuthenticated, subscribeToAuthChange } from '../../lib/auth';
 
 export function MainLayout() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [authed, setAuthed] = useState(isAuthenticated());
 
   useEffect(() => {
@@ -12,6 +13,21 @@ export function MainLayout() {
       setAuthed(isAuthenticated());
     });
   }, []);
+
+  const isHomePage = location.pathname === '/';
+  const isAdminArea = location.pathname.startsWith('/admin');
+
+  const navItems = useMemo(() => {
+    if (!authed) {
+      return isAdminArea ? [] : [{ to: '/admin', label: 'Admin' }];
+    }
+
+    if (isHomePage) {
+      return [{ to: '/admin/dashboard', label: 'Dashboard' }];
+    }
+
+    return [];
+  }, [authed, isAdminArea, isHomePage]);
 
   const handleLogout = () => {
     clearAuth();
@@ -22,33 +38,28 @@ export function MainLayout() {
     <div className="app-shell">
       <header className="app-header">
         <div className="app-header__inner">
-          <div className="app-brand">Frontend App</div>
+          <Link to="/" className="app-brand">
+            Frontend App
+          </Link>
 
           <nav className="app-nav">
-            <NavLink
-              to="/"
-              end
-              className={({ isActive }) =>
-                isActive ? 'app-nav__link active' : 'app-nav__link'
-              }
-            >
-              Home
-            </NavLink>
+            {navItems.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className={({ isActive }) =>
+                  isActive ? 'app-nav__link active' : 'app-nav__link'
+                }
+              >
+                {item.label}
+              </NavLink>
+            ))}
 
             {authed ? (
               <button type="button" className="app-nav__action" onClick={handleLogout}>
                 Logout
               </button>
-            ) : (
-              <NavLink
-                to="/admin"
-                className={({ isActive }) =>
-                  isActive ? 'app-nav__link active' : 'app-nav__link'
-                }
-              >
-                Admin
-              </NavLink>
-            )}
+            ) : null}
           </nav>
         </div>
       </header>

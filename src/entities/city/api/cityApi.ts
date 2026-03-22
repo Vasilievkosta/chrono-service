@@ -26,7 +26,7 @@ export const cityApi = baseApi.injectEndpoints({
         method: 'POST',
         body,
       }),
-      invalidatesTags: ['City'],
+      invalidatesTags: ['City', 'Master', 'User', 'Order'],
     }),
     updateCity: builder.mutation<City, UpdateCityRequest>({
       query: (body) => ({
@@ -34,14 +34,14 @@ export const cityApi = baseApi.injectEndpoints({
         method: 'PUT',
         body,
       }),
-      invalidatesTags: ['City'],
+      invalidatesTags: ['City', 'Master', 'User', 'Order'],
     }),
     deleteCity: builder.mutation<unknown, number>({
       query: (id) => ({
         url: `/api/city/delete/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['City'],
+      invalidatesTags: ['City', 'Master', 'User', 'Order'],
     }),
   }),
 });

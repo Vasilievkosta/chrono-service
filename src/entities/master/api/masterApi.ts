@@ -45,7 +45,7 @@ export const masterApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAvailableMasters: builder.mutation<Master[], MasterRequest>({
       query: (body) => ({
-        url: '/api/master/datatime',
+        url: '/api/master/datetime',
         method: 'POST',
         body,
       }),
@@ -63,7 +63,7 @@ export const masterApi = baseApi.injectEndpoints({
         method: 'POST',
         body,
       }),
-      invalidatesTags: ['Master'],
+      invalidatesTags: ['Master', 'Order'],
     }),
     updateMaster: builder.mutation<Master, UpdateMasterRequest>({
       query: (body) => ({
@@ -71,14 +71,14 @@ export const masterApi = baseApi.injectEndpoints({
         method: 'PUT',
         body,
       }),
-      invalidatesTags: ['Master'],
+      invalidatesTags: ['Master', 'Order'],
     }),
     deleteMaster: builder.mutation<unknown, number>({
       query: (id) => ({
         url: `/api/master/delete/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Master'],
+      invalidatesTags: ['Master', 'Order'],
     }),
   }),
 });
