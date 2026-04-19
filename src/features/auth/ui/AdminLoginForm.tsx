@@ -1,19 +1,20 @@
-﻿import { zodResolver } from "@hookform/resolvers/zod"
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { useNavigate } from "react-router-dom"
+﻿import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
-import { Button } from "../../../shared/ui/Button"
-import { FormField } from "../../../shared/ui/FormField"
-import { TextInput } from "../../../shared/ui/TextInput"
-import { setAuth } from "../../../shared/lib/auth"
-import { useLoginMutation } from "../api/authApi"
-import { adminLoginSchema, type AdminLoginValues } from "../model/adminLoginSchema"
+import { Button } from '../../../shared/ui/Button';
+import { FormField } from '../../../shared/ui/FormField';
+import { TextInput } from '../../../shared/ui/TextInput';
+import { setAuth } from '../../../shared/lib/auth';
+import { useLoginMutation } from '../api/authApi';
+import { adminLoginSchema, type AdminLoginValues } from '../model/adminLoginSchema';
+import styles from './AdminLoginForm.module.css';
 
 export function AdminLoginForm() {
-  const navigate = useNavigate()
-  const [loginError, setLoginError] = useState("")
-  const [login] = useLoginMutation()
+  const navigate = useNavigate();
+  const [loginError, setLoginError] = useState('');
+  const [login] = useLoginMutation();
   const {
     register,
     handleSubmit,
@@ -21,49 +22,56 @@ export function AdminLoginForm() {
   } = useForm<AdminLoginValues>({
     resolver: zodResolver(adminLoginSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
-  })
+  });
 
   const onSubmit = async (values: AdminLoginValues) => {
-    setLoginError("")
+    setLoginError('');
 
     try {
-      const response = await login(values).unwrap()
+      const response = await login(values).unwrap();
 
       if (response.data === true) {
-        setAuth(response.token)
-        navigate("/admin/dashboard")
-        return
+        setAuth(response.token);
+        navigate('/admin/dashboard');
+        return;
       }
 
-      setLoginError("Неверный email или пароль.")
+      setLoginError('Неверный email или пароль.');
     } catch {
-      setLoginError("Не удалось выполнить вход. Попробуйте позже.")
+      setLoginError('Не удалось выполнить вход. Попробуйте позже.');
     }
-  }
+  };
 
   return (
-    <form className="order-form" onSubmit={handleSubmit(onSubmit)} noValidate>
+    <form className={`order-form ${styles.form}`} onSubmit={handleSubmit(onSubmit)} noValidate>
       <FormField label="Email" error={errors.email?.message} required>
-        <TextInput type="email" placeholder="admin@example.com" autoComplete="username" {...register("email")} />
+        <TextInput
+          className={`form-control ${styles.input}`}
+          type="email"
+          placeholder="admin@example.com"
+          autoComplete="username"
+          {...register('email')}
+        />
       </FormField>
 
       <FormField label="Пароль" error={errors.password?.message} required>
         <TextInput
+          className={`form-control ${styles.input}`}
           type="password"
           placeholder="passwordsecret"
           autoComplete="current-password"
-          {...register("password")}
+          {...register('password')}
         />
       </FormField>
 
-      <Button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? "Идет загрузка..." : "Войти"}
+      <Button className={styles.submitButton} type="submit" disabled={isSubmitting}>
+        {isSubmitting ? 'Идет загрузка...' : 'Войти'}
       </Button>
 
-      {loginError ? <div className="form-submit-error">{loginError}</div> : null}
+      {loginError ? <div className={`form-submit-error ${styles.submitError}`}>{loginError}</div> : null}
     </form>
-  )
+  );
 }

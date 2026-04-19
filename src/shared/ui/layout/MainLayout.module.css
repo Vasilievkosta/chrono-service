@@ -1,0 +1,15 @@
+﻿.shell {
+  min-height: 100vh;
+}
+
+.content {
+  width: min(100%, 1200px);
+  margin: 0 auto;
+  padding: var(--space-2xl, 40px) var(--space-lg, 20px);
+}
+
+@media (max-width: 640px) {
+  .content {
+    padding-top: var(--space-xl, 24px);
+  }
+}

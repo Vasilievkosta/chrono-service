@@ -1,11 +1,11 @@
-﻿import { Navigate, Outlet } from 'react-router-dom';
+﻿import { Navigate, Outlet } from "react-router-dom"
 
-import { isAuthenticated } from '../../shared/lib/auth';
+import { isAuthenticated } from "../../shared/lib/auth"
 
 export function ProtectedRoute() {
   if (!isAuthenticated()) {
-    return <Navigate to="/admin" replace />;
+    return <Navigate to="/admin" replace />
   }
 
-  return <Outlet />;
+  return <Outlet />
 }

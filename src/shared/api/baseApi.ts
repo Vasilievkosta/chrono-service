@@ -5,7 +5,8 @@ import { TOKEN_STORAGE } from '../lib/auth';
 export const baseApi = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://render-clock.onrender.com',
+    baseUrl: 'http://localhost:5000',
+	// baseUrl: 'https://render-clock.onrender.com',
     prepareHeaders: (headers) => {
       const token = typeof window === 'undefined'
         ? null

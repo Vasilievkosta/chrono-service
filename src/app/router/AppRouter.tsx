@@ -1,10 +1,10 @@
-﻿import { Route, Routes } from 'react-router-dom';
+﻿import { Route, Routes } from "react-router-dom"
 
-import { AdminPage } from '../../pages/admin/AdminPage';
-import { AdminDashboardPage } from '../../pages/admin-dashboard/AdminDashboardPage';
-import { HomePage } from '../../pages/home/HomePage';
-import { MainLayout } from '../../shared/ui/layout/MainLayout';
-import { ProtectedRoute } from './ProtectedRoute';
+import { AdminPage } from "../../pages/admin/AdminPage"
+import { AdminDashboardPage } from "../../pages/admin-dashboard/AdminDashboardPage"
+import { HomePage } from "../../pages/home/HomePage"
+import { MainLayout } from "../../shared/ui/layout/MainLayout"
+import { ProtectedRoute } from "./ProtectedRoute"
 
 export function AppRouter() {
   return (
@@ -17,5 +17,5 @@ export function AppRouter() {
         </Route>
       </Route>
     </Routes>
-  );
+  )
 }

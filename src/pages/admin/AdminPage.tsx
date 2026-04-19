@@ -1,12 +1,14 @@
-﻿import { AdminLoginForm } from '../../features/auth/ui/AdminLoginForm';
+﻿import styles from './AdminPage.module.css';
+
+import { AdminLoginForm } from '../../features/auth/ui/AdminLoginForm';
 
 export function AdminPage() {
   return (
-    <section className="page">
-      <div className="info-card">
-        <div className="form-intro">
-          <h1>Admin login</h1>
-          <p>Форма входа администратора пока работает только на клиенте.</p>
+    <section className={`page ${styles.page}`}>
+      <div className={`info-card ${styles.card}`}>
+        <div className={`form-intro ${styles.intro}`}>
+          <h1 className={styles.title}>Admin login</h1>
+          <p className={styles.description}>Форма входа администратора пока работает только на клиенте.</p>
         </div>
 
         <AdminLoginForm />
