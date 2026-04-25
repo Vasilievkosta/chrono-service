@@ -1,0 +1,185 @@
+.panel {
+  display: grid;
+  gap: var(--space-md, 16px);
+}
+
+.toolbar {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.state {
+  color: var(--color-text-muted, #475569);
+}
+
+.stateError {
+  color: var(--color-danger, #dc2626);
+}
+
+.panel :global(.table-wrap) {
+  overflow-x: auto;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-lg, 18px);
+  background: var(--color-bg, #ffffff);
+}
+
+.panel :global(.data-table) {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.panel :global(.data-table th),
+.panel :global(.data-table td) {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border, #e2e8f0);
+  white-space: nowrap;
+}
+
+.panel :global(.data-table th) {
+  background: var(--color-bg-subtle, #f8fafc);
+  color: var(--color-text-muted, #475569);
+  font-size: var(--font-size-sm, 14px);
+}
+
+.panel :global(.data-table tbody tr:last-child td) {
+  border-bottom: 0;
+}
+
+.panel :global(.table-empty) {
+  padding: var(--space-lg, 20px);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-lg, 18px);
+  background: var(--color-bg, #ffffff);
+  color: var(--color-text-faint, #64748b);
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-xs, 8px);
+}
+
+.iconButton {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--color-bg-muted-hover, #cbd5e1);
+  border-radius: var(--radius-sm, 10px);
+  background: var(--color-bg, #ffffff);
+  cursor: pointer;
+  font: inherit;
+}
+
+.iconButton:hover {
+  background: var(--color-primary-soft, #eff6ff);
+}
+
+.modalForm {
+  display: grid;
+  gap: var(--space-md, 16px);
+}
+
+.field {
+  width: 100%;
+  min-height: 46px;
+  padding: 0 14px;
+  border: 1px solid var(--color-bg-muted-hover, #cbd5e1);
+  border-radius: var(--radius-md, 14px);
+  background: var(--color-bg, #ffffff);
+  color: var(--color-text-strong, #0f172a);
+  font: inherit;
+}
+
+.selectField :global(.master-select__control) {
+  min-height: 46px;
+  border-color: var(--color-bg-muted-hover, #cbd5e1);
+  border-radius: var(--radius-md, 14px);
+  box-shadow: none;
+}
+
+.selectField :global(.master-select__control--is-focused) {
+  border-color: var(--color-primary-strong, #2563eb);
+  box-shadow: 0 0 0 4px var(--color-focus-ring, rgba(37, 99, 235, 0.12));
+}
+
+.selectField :global(.master-select__menu) {
+  z-index: 5;
+}
+
+.message {
+  margin: 0;
+}
+
+.modalError {
+  color: var(--color-danger, #dc2626);
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm, 12px);
+}
+
+.addButton {
+  min-height: 48px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: var(--radius-md, 14px);
+  background: var(--color-primary, #1d4ed8);
+  color: var(--color-bg, #ffffff);
+  font-weight: var(--font-weight-semibold, 600);
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.addButton:hover {
+  background: var(--color-primary-hover, #1e40af);
+  transform: translateY(-1px);
+}
+
+.addButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+  transform: none;
+}
+
+.modalContent {
+  display: grid;
+  gap: var(--space-md, 16px);
+}
+
+.field:focus {
+  outline: none;
+  border-color: var(--color-primary-strong, #2563eb);
+  box-shadow: 0 0 0 4px var(--color-focus-ring, rgba(37, 99, 235, 0.12));
+}
+
+.secondaryButton {
+  background: var(--color-bg-muted, #e2e8f0);
+  color: var(--color-text-strong, #0f172a);
+}
+
+.secondaryButton:hover {
+  background: var(--color-bg-muted-hover, #cbd5e1);
+}
+.primaryButton {
+  min-height: 48px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: var(--radius-md, 14px);
+  background: var(--color-primary, #1d4ed8);
+  color: var(--color-bg, #ffffff);
+  font-weight: var(--font-weight-semibold, 600);
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.primaryButton:hover {
+  background: var(--color-primary-hover, #1e40af);
+  transform: translateY(-1px);
+}
+
+.primaryButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+  transform: none;
+}

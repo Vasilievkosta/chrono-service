@@ -1,4 +1,4 @@
-﻿import { useMemo, useState } from 'react';
+import { useMemo, useState } from "react"
 
 import {
   type City,
@@ -6,128 +6,133 @@ import {
   useDeleteCityMutation,
   useGetCitiesQuery,
   useUpdateCityMutation,
-} from '../../../entities/city/api/cityApi';
-import { Button } from '../../../shared/ui/Button';
-import { DataTable } from '../../../shared/ui/DataTable';
-import { Modal } from '../../../shared/ui/Modal';
-import { TextInput } from '../../../shared/ui/TextInput';
+} from "../../../entities/city/api/cityApi"
+import { Button } from "../../../shared/ui/Button"
+import { DataTable } from "../../../shared/ui/DataTable"
+import { Modal } from "../../../shared/ui/Modal"
+import { TextInput } from "../../../shared/ui/TextInput"
+import styles from "./CitiesTab.module.css"
 
-type CityModalMode = 'create' | 'edit' | 'delete' | null;
+type CityModalMode = "create" | "edit" | "delete" | null
 
 export function CitiesTab() {
-  const { data = [], isLoading, isError } = useGetCitiesQuery();
-  const [createCity, { isLoading: isCreating }] = useCreateCityMutation();
-  const [updateCity, { isLoading: isUpdating }] = useUpdateCityMutation();
-  const [deleteCity, { isLoading: isDeleting }] = useDeleteCityMutation();
-  const [modalMode, setModalMode] = useState<CityModalMode>(null);
-  const [selectedCity, setSelectedCity] = useState<City | null>(null);
-  const [cityTitle, setCityTitle] = useState('');
-  const [modalError, setModalError] = useState('');
+  const { data = [], isLoading, isError } = useGetCitiesQuery()
+  const [createCity, { isLoading: isCreating }] = useCreateCityMutation()
+  const [updateCity, { isLoading: isUpdating }] = useUpdateCityMutation()
+  const [deleteCity, { isLoading: isDeleting }] = useDeleteCityMutation()
+  const [modalMode, setModalMode] = useState<CityModalMode>(null)
+  const [selectedCity, setSelectedCity] = useState<City | null>(null)
+  const [cityTitle, setCityTitle] = useState("")
+  const [modalError, setModalError] = useState("")
 
-  const isMutating = isCreating || isUpdating || isDeleting;
+  const isMutating = isCreating || isUpdating || isDeleting
 
   const modalTitle = useMemo(() => {
-    if (modalMode === 'create') {
-      return 'Создать город';
+    if (modalMode === "create") {
+      return "Создать город"
     }
 
-    if (modalMode === 'edit') {
-      return 'Редактировать город';
+    if (modalMode === "edit") {
+      return "Редактировать город"
     }
 
-    if (modalMode === 'delete') {
-      return 'Удалить город';
+    if (modalMode === "delete") {
+      return "Удалить город"
     }
 
-    return '';
-  }, [modalMode]);
+    return ""
+  }, [modalMode])
 
   const openCreateModal = () => {
-    setModalMode('create');
-    setSelectedCity(null);
-    setCityTitle('');
-    setModalError('');
-  };
+    setModalMode("create")
+    setSelectedCity(null)
+    setCityTitle("")
+    setModalError("")
+  }
 
   const openEditModal = (city: City) => {
-    setModalMode('edit');
-    setSelectedCity(city);
-    setCityTitle(city.title);
-    setModalError('');
-  };
+    setModalMode("edit")
+    setSelectedCity(city)
+    setCityTitle(city.title)
+    setModalError("")
+  }
 
   const openDeleteModal = (city: City) => {
-    setModalMode('delete');
-    setSelectedCity(city);
-    setCityTitle(city.title);
-    setModalError('');
-  };
+    setModalMode("delete")
+    setSelectedCity(city)
+    setCityTitle(city.title)
+    setModalError("")
+  }
 
   const closeModal = () => {
     if (isMutating) {
-      return;
+      return
     }
 
-    setModalMode(null);
-    setSelectedCity(null);
-    setCityTitle('');
-    setModalError('');
-  };
+    setModalMode(null)
+    setSelectedCity(null)
+    setCityTitle("")
+    setModalError("")
+  }
 
   const handleConfirm = async () => {
-    setModalError('');
+    setModalError("")
 
     try {
-      if (modalMode === 'create') {
-        const value = cityTitle.trim();
+      if (modalMode === "create") {
+        const value = cityTitle.trim()
 
         if (!value) {
-          setModalError('Введите название города.');
-          return;
+          setModalError("Введите название города.")
+          return
         }
 
-        await createCity({ newTitle: value }).unwrap();
-        closeModal();
-        return;
+        await createCity({ newTitle: value }).unwrap()
+        closeModal()
+        return
       }
 
-      if (modalMode === 'edit' && selectedCity) {
-        const value = cityTitle.trim();
+      if (modalMode === "edit" && selectedCity) {
+        const value = cityTitle.trim()
 
         if (!value) {
-          setModalError('Введите название города.');
-          return;
+          setModalError("Введите название города.")
+          return
         }
 
         await updateCity({
           cityId: selectedCity.id,
           newTitle: value,
-        }).unwrap();
-        closeModal();
-        return;
+        }).unwrap()
+        closeModal()
+        return
       }
 
-      if (modalMode === 'delete' && selectedCity) {
-        await deleteCity(selectedCity.id).unwrap();
-        closeModal();
+      if (modalMode === "delete" && selectedCity) {
+        await deleteCity(selectedCity.id).unwrap()
+        closeModal()
       }
     } catch {
-      setModalError('Не удалось выполнить действие. Попробуйте позже.');
+      setModalError("Не удалось выполнить действие. Попробуйте позже.")
     }
-  };
+  }
 
   if (isLoading) {
-    return <div className="dashboard-state">Загрузка городов...</div>;
+    return <div className={`dashboard-state ${styles.state}`}>Загрузка городов...</div>
   }
 
   if (isError) {
-    return <div className="dashboard-state dashboard-state--error">Не удалось загрузить города.</div>;
+    return (
+      <div className={`dashboard-state dashboard-state--error ${styles.state} ${styles.stateError}`}>
+        Не удалось загрузить города.
+      </div>
+    )
   }
 
   return (
     <>
-      <div className="dashboard-panel">
-        <div className="dashboard-toolbar">
+      <div className={`dashboard-panel ${styles.panel}`}>
+        <div className={`dashboard-toolbar ${styles.toolbar}`}>
           <Button type="button" onClick={openCreateModal}>
             Add City
           </Button>
@@ -138,19 +143,27 @@ export function CitiesTab() {
           getRowKey={(row) => row.id}
           columns={[
             {
-              key: 'city',
-              header: 'City',
+              key: "city",
+              header: "City",
               render: (row) => row.title,
             },
             {
-              key: 'actions',
-              header: 'Actions',
+              key: "actions",
+              header: "Actions",
               render: (row) => (
-                <div className="table-actions">
-                  <button type="button" className="icon-button" onClick={() => openEditModal(row)}>
+                <div className={`table-actions ${styles.actions}`}>
+                  <button
+                    type="button"
+                    className={`icon-button ${styles.iconButton}`}
+                    onClick={() => openEditModal(row)}
+                  >
                     ✏️
                   </button>
-                  <button type="button" className="icon-button" onClick={() => openDeleteModal(row)}>
+                  <button
+                    type="button"
+                    className={`icon-button ${styles.iconButton}`}
+                    onClick={() => openDeleteModal(row)}
+                  >
                     🗑
                   </button>
                 </div>
@@ -161,11 +174,12 @@ export function CitiesTab() {
       </div>
 
       <Modal title={modalTitle} isOpen={modalMode !== null} onClose={closeModal}>
-        {modalMode === 'delete' ? (
-          <p>Удалить город {selectedCity?.title}?</p>
+        {modalMode === "delete" ? (
+          <p className={styles.message}>Удалить город {selectedCity?.title}?</p>
         ) : (
-          <div className="modal-form">
+          <div className={`modal-form ${styles.modalForm}`}>
             <TextInput
+              className={`form-control ${styles.field}`}
               value={cityTitle}
               onChange={(event) => setCityTitle(event.target.value)}
               placeholder="Название города"
@@ -173,13 +187,13 @@ export function CitiesTab() {
           </div>
         )}
 
-        {modalError ? <div className="modal-error">{modalError}</div> : null}
+        {modalError ? <div className={`modal-error ${styles.modalError}`}>{modalError}</div> : null}
 
-        <div className="modal-actions">
-          {modalMode === 'create' ? (
+        <div className={`modal-actions ${styles.modalActions}`}>
+          {modalMode === "create" ? (
             <>
               <Button type="button" onClick={handleConfirm} disabled={isMutating}>
-                {isCreating ? 'Creating...' : 'Create'}
+                {isCreating ? "Creating..." : "Create"}
               </Button>
               <Button type="button" className="button button--secondary" onClick={closeModal} disabled={isMutating}>
                 Cancel
@@ -187,10 +201,10 @@ export function CitiesTab() {
             </>
           ) : null}
 
-          {modalMode === 'edit' ? (
+          {modalMode === "edit" ? (
             <>
               <Button type="button" onClick={handleConfirm} disabled={isMutating}>
-                {isUpdating ? 'Saving...' : 'Save'}
+                {isUpdating ? "Saving..." : "Save"}
               </Button>
               <Button type="button" className="button button--secondary" onClick={closeModal} disabled={isMutating}>
                 Cancel
@@ -198,10 +212,10 @@ export function CitiesTab() {
             </>
           ) : null}
 
-          {modalMode === 'delete' ? (
+          {modalMode === "delete" ? (
             <>
               <Button type="button" onClick={handleConfirm} disabled={isMutating}>
-                {isDeleting ? 'Deleting...' : 'Yes'}
+                {isDeleting ? "Deleting..." : "Yes"}
               </Button>
               <Button type="button" className="button button--secondary" onClick={closeModal} disabled={isMutating}>
                 No
@@ -211,5 +225,5 @@ export function CitiesTab() {
         </div>
       </Modal>
     </>
-  );
+  )
 }

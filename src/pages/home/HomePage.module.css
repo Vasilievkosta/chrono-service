@@ -1,0 +1,15 @@
+.page {
+  display: grid;
+  gap: var(--space-xl, 24px);
+  justify-items: center;
+}
+
+.content {
+  width: min(100%, 760px);
+}
+
+@media (max-width: 768px) {
+  .content {
+    width: 100%;
+  }
+}

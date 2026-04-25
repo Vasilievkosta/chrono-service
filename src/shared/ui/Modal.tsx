@@ -1,28 +1,30 @@
-﻿import type { PropsWithChildren } from 'react';
+import type { PropsWithChildren } from "react"
+
+import styles from "./Modal.module.css"
 
 interface ModalProps extends PropsWithChildren {
-  title: string;
-  isOpen: boolean;
-  onClose: () => void;
+  title: string
+  isOpen: boolean
+  onClose: () => void
 }
 
 export function Modal({ title, isOpen, onClose, children }: ModalProps) {
   if (!isOpen) {
-    return null;
+    return null
   }
 
   return (
-    <div className="modal" role="dialog" aria-modal="true" aria-label={title}>
-      <div className="modal__backdrop" onClick={onClose} />
-      <div className="modal__content">
-        <div className="modal__header">
-          <h3>{title}</h3>
-          <button type="button" className="modal__close" onClick={onClose}>
+    <div className={`modal ${styles.modal}`} role="dialog" aria-modal="true" aria-label={title}>
+      <div className={`modal__backdrop ${styles.backdrop}`} onClick={onClose} />
+      <div className={`modal__content ${styles.content}`}>
+        <div className={`modal__header ${styles.header}`}>
+          <h3 className={styles.title}>{title}</h3>
+          <button type="button" className={`modal__close ${styles.close}`} onClick={onClose}>
             Закрыть
           </button>
         </div>
-        <div className="modal__body">{children}</div>
+        <div className={`modal__body ${styles.body}`}>{children}</div>
       </div>
     </div>
-  );
+  )
 }

@@ -1,40 +1,41 @@
-﻿import { zodResolver } from '@hookform/resolvers/zod';
-import { Controller, useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Controller, useForm } from "react-hook-form"
+import { useState } from "react"
 
-import { useGetCitiesQuery } from '../../../entities/city/api/cityApi';
-import { useGetAvailableMastersMutation, type Master } from '../../../entities/master/api/masterApi';
-import { useCreateOrderMutation } from '../../../entities/order/api/orderApi';
-import { Button } from '../../../shared/ui/Button';
-import { DatePickerField } from '../../../shared/ui/DatePickerField';
-import { FormField } from '../../../shared/ui/FormField';
-import { Modal } from '../../../shared/ui/Modal';
-import { RadioGroup } from '../../../shared/ui/RadioGroup';
-import { SelectField } from '../../../shared/ui/SelectField';
-import { TextInput } from '../../../shared/ui/TextInput';
-import { formatDate, formatHour, timeOptions } from '../lib/orderSchedule';
-import { orderFormSchema, type OrderFormValues, watchSizes } from '../model/orderFormSchema';
-import { MasterSelectModal } from './MasterSelectModal';
+import { useGetCitiesQuery } from "../../../entities/city/api/cityApi"
+import { useGetAvailableMastersMutation, type Master } from "../../../entities/master/api/masterApi"
+import { useCreateOrderMutation } from "../../../entities/order/api/orderApi"
+import { Button } from "../../../shared/ui/Button"
+import { DatePickerField } from "../../../shared/ui/DatePickerField"
+import { FormField } from "../../../shared/ui/FormField"
+import { Modal } from "../../../shared/ui/Modal"
+import { RadioGroup } from "../../../shared/ui/RadioGroup"
+import { SelectField } from "../../../shared/ui/SelectField"
+import { TextInput } from "../../../shared/ui/TextInput"
+import { formatDate, formatHour, timeOptions } from "../lib/orderSchedule"
+import { orderFormSchema, type OrderFormValues, watchSizes } from "../model/orderFormSchema"
+import { MasterSelectModal } from "./MasterSelectModal"
+import styles from "./OrderForm.module.css"
 
 const watchSizeLabels: Record<(typeof watchSizes)[number], string> = {
-  large: 'Большие',
-  medium: 'Средние',
-  small: 'Маленькие',
-};
+  large: "Большие",
+  medium: "Средние",
+  small: "Маленькие",
+}
 
 const durationBySize: Record<(typeof watchSizes)[number], number> = {
   large: 3,
   medium: 2,
   small: 1,
-};
+}
 
 export function OrderForm() {
-  const [masters, setMasters] = useState<Master[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
-  const [pendingValues, setPendingValues] = useState<OrderFormValues | null>(null);
-  const [submitError, setSubmitError] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
+  const [masters, setMasters] = useState<Master[]>([])
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false)
+  const [pendingValues, setPendingValues] = useState<OrderFormValues | null>(null)
+  const [submitError, setSubmitError] = useState("")
+  const [successMessage, setSuccessMessage] = useState("")
   const {
     control,
     register,
@@ -44,49 +45,49 @@ export function OrderForm() {
   } = useForm<OrderFormValues>({
     resolver: zodResolver(orderFormSchema),
     defaultValues: {
-      name: '',
-      email: '',
-      city: '',
-      watchSize: 'medium',
+      name: "",
+      email: "",
+      city: "",
+      watchSize: "medium",
       repairDate: undefined,
-      repairTime: '',
+      repairTime: "",
     },
-  });
+  })
 
-  const { data: cities = [], isLoading, isError } = useGetCitiesQuery();
-  const [getAvailableMasters, { isLoading: isLoadingMasters }] = useGetAvailableMastersMutation();
-  const [createOrder, { isLoading: isCreatingOrder }] = useCreateOrderMutation();
+  const { data: cities = [], isLoading, isError } = useGetCitiesQuery()
+  const [getAvailableMasters, { isLoading: isLoadingMasters }] = useGetAvailableMastersMutation()
+  const [createOrder, { isLoading: isCreatingOrder }] = useCreateOrderMutation()
 
   const onSubmit = async (values: OrderFormValues) => {
-    setSubmitError('');
-    setSuccessMessage('');
+    setSubmitError("")
+    setSuccessMessage("")
 
     try {
-      const duration = durationBySize[values.watchSize];
+      const duration = durationBySize[values.watchSize]
       const availableMasters = await getAvailableMasters({
         cityId: values.city,
         date: formatDate(values.repairDate),
         time: formatHour(values.repairTime),
         duration,
-      }).unwrap();
+      }).unwrap()
 
-      setPendingValues(values);
-      setMasters(availableMasters);
-      setIsModalOpen(true);
+      setPendingValues(values)
+      setMasters(availableMasters)
+      setIsModalOpen(true)
     } catch {
-      setSubmitError('Не удалось получить список мастеров. Попробуйте позже.');
+      setSubmitError("Не удалось получить список мастеров. Попробуйте позже.")
     }
-  };
+  }
 
   const handleSelectMaster = async (master: Master) => {
     if (!pendingValues) {
-      return;
+      return
     }
 
-    setSubmitError('');
+    setSubmitError("")
 
     try {
-      const duration = durationBySize[pendingValues.watchSize];
+      const duration = durationBySize[pendingValues.watchSize]
 
       await createOrder({
         date: formatDate(pendingValues.repairDate),
@@ -96,64 +97,79 @@ export function OrderForm() {
         master_id: master.id,
         userName: pendingValues.name,
         email: pendingValues.email,
-      }).unwrap();
+      }).unwrap()
 
-      setIsModalOpen(false);
-      setPendingValues(null);
-      setMasters([]);
-      setSuccessMessage('Заказ успешно создан.');
-      setIsSuccessModalOpen(true);
+      setIsModalOpen(false)
+      setPendingValues(null)
+      setMasters([])
+      setSuccessMessage("Заказ успешно создан.")
+      setIsSuccessModalOpen(true)
       reset({
-        name: '',
-        email: '',
-        city: '',
-        watchSize: 'medium',
+        name: "",
+        email: "",
+        city: "",
+        watchSize: "medium",
         repairDate: undefined,
-        repairTime: '',
-      });
+        repairTime: "",
+      })
     } catch {
-      setSubmitError('Не удалось создать заказ. Попробуйте позже.');
+      setSubmitError("Не удалось создать заказ. Попробуйте позже.")
     }
-  };
+  }
 
   const handleCloseModal = () => {
     if (isCreatingOrder) {
-      return;
+      return
     }
 
-    setIsModalOpen(false);
-    setPendingValues(null);
-    setMasters([]);
-  };
+    setIsModalOpen(false)
+    setPendingValues(null)
+    setMasters([])
+  }
 
   const handleCloseSuccessModal = () => {
-    setIsSuccessModalOpen(false);
-    setSuccessMessage('');
-  };
+    setIsSuccessModalOpen(false)
+    setSuccessMessage("")
+  }
 
-  const cityErrorMessage = errors.city?.message ?? (isError ? 'Не удалось загрузить города' : undefined);
+  const cityErrorMessage = errors.city?.message ?? (isError ? "Не удалось загрузить города" : undefined)
 
   return (
     <>
-      <section className="info-card">
-        <div className="form-intro">
-          <h2>Create repair order</h2>
-          <p>Города подгружаются с backend через RTK Query.</p>
+      <section className={`info-card ${styles.card}`}>
+        <div className={`form-intro ${styles.intro}`}>
+          <h2 className={styles.title}>Оформить заказ на ремонт часов</h2>
+          <p className={styles.description}>Выберите параметры заказа, и мы подберем доступного мастера.</p>
         </div>
 
-        <form className="order-form" onSubmit={handleSubmit(onSubmit)} noValidate>
+        <form className={`order-form ${styles.form}`} onSubmit={handleSubmit(onSubmit)} noValidate>
           <FormField label="Имя" error={errors.name?.message} required>
-            <TextInput placeholder="Введите имя" autoComplete="name" {...register('name')} />
+            <TextInput
+              className={`form-control ${styles.input}`}
+              placeholder="Введите имя"
+              autoComplete="name"
+              {...register("name")}
+            />
           </FormField>
 
           <FormField label="Email" error={errors.email?.message} required>
-            <TextInput type="email" placeholder="name@example.com" autoComplete="email" {...register('email')} />
+            <TextInput
+              className={`form-control ${styles.input}`}
+              type="email"
+              placeholder="Введите email"
+              autoComplete="email"
+              {...register("email")}
+            />
           </FormField>
 
           <FormField label="Город" error={cityErrorMessage} required>
-            <SelectField {...register('city')} disabled={isLoading || isError}>
+            <SelectField
+              className={`form-control ${styles.input}`}
+              {...register("city")}
+              disabled={isLoading || isError}
+            >
               <option value="">
-                {isLoading ? 'Загрузка городов...' : isError ? 'Ошибка загрузки' : 'Выберите город'}
+                {isLoading ? "Загрузка городов..." : isError ? "Ошибка загрузки" : "Выберите город"}
               </option>
               {cities.map((city) => (
                 <option key={city.id} value={String(city.id)}>
@@ -192,7 +208,7 @@ export function OrderForm() {
           </FormField>
 
           <FormField label="Время" error={errors.repairTime?.message} required>
-            <SelectField {...register('repairTime')}>
+            <SelectField className={`form-control ${styles.input}`} {...register("repairTime")}>
               <option value="">Выберите время</option>
               {timeOptions.map((time) => (
                 <option key={time.value} value={time.value}>
@@ -202,11 +218,15 @@ export function OrderForm() {
             </SelectField>
           </FormField>
 
-          <Button type="submit" disabled={isSubmitting || isLoading || isError || isLoadingMasters || isCreatingOrder}>
-            {isLoadingMasters ? 'Ищем мастеров...' : isCreatingOrder ? 'Создаем заказ...' : 'Заказать'}
+          <Button
+            className={styles.submitButton}
+            type="submit"
+            disabled={isSubmitting || isLoading || isError || isLoadingMasters || isCreatingOrder}
+          >
+            {isLoadingMasters ? "Ищем мастеров..." : isCreatingOrder ? "Создаем заказ..." : "Заказать"}
           </Button>
 
-          {submitError ? <div className="form-submit-error">{submitError}</div> : null}
+          {submitError ? <div className={`form-submit-error ${styles.submitError}`}>{submitError}</div> : null}
         </form>
       </section>
 
@@ -223,11 +243,11 @@ export function OrderForm() {
           <p>{successMessage}</p>
           <div className="modal-actions">
             <Button type="button" onClick={handleCloseSuccessModal}>
-              OK
+              ОК
             </Button>
           </div>
         </div>
       </Modal>
     </>
-  );
+  )
 }

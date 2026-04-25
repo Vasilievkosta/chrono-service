@@ -1,7 +1,36 @@
+.card {
+  width: 100%;
+  padding: var(--space-xl, 24px);
+  border-radius: var(--radius-xl, 24px);
+  background: var(--color-bg-frosted, rgba(255, 255, 255, 0.9));
+  border: 1px solid var(--color-border, #e2e8f0);
+  box-shadow: 0 20px 40px var(--color-shadow-soft, rgba(15, 23, 42, 0.08));
+  font-family: var(--font-family-base, "Segoe UI", Arial, sans-serif);
+  line-height: var(--line-height-base, 1.5);
+}
+
+.intro {
+  display: grid;
+  gap: var(--space-xs, 8px);
+  margin-bottom: var(--space-xl, 24px);
+}
+
+.title {
+  margin-top: 0;
+  margin-bottom: var(--space-sm, 12px);
+}
+
+.description {
+  margin: 0;
+  color: var(--color-text-muted, #475569);
+}
+
 .form {
   display: grid;
   gap: 18px;
   width: 100%;
+  font-size: var(--font-size-md, 16px);
+  line-height: var(--line-height-base, 1.5);
 }
 
 .form :global(.form-field) {
@@ -17,6 +46,18 @@
 .form :global(.form-field__required),
 .form :global(.form-field__error) {
   color: var(--color-danger, #dc2626);
+}
+
+.form :global(input),
+.form :global(select),
+.form :global(button) {
+  font: inherit;
+}
+
+.form :global(.radio-card),
+.form :global(.date-picker__trigger) {
+  font: inherit;
+  line-height: inherit;
 }
 
 .input {
@@ -66,4 +107,10 @@
 .submitError {
   margin-top: -6px;
   color: var(--color-danger, #dc2626);
+}
+
+@media (max-width: 640px) {
+  .card {
+    padding: var(--space-lg, 20px);
+  }
 }

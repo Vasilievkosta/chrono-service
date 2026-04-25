@@ -1,8 +1,8 @@
-﻿import { Controller, useForm } from 'react-hook-form';
-import { useMemo, useState } from 'react';
-import Select from 'react-select';
+import { Controller, useForm } from "react-hook-form"
+import { useMemo, useState } from "react"
+import Select from "react-select"
 
-import { type City, useGetCitiesQuery } from '../../../entities/city/api/cityApi';
+import { type City, useGetCitiesQuery } from "../../../entities/city/api/cityApi"
 import {
   type MasterOfCities,
   useCreateMasterMutation,
@@ -10,52 +10,53 @@ import {
   useGetMastersQuery,
   useGetRatingsQuery,
   useUpdateMasterMutation,
-} from '../../../entities/master/api/masterApi';
-import { Button } from '../../../shared/ui/Button';
-import { DataTable } from '../../../shared/ui/DataTable';
-import { Modal } from '../../../shared/ui/Modal';
-import { TextInput } from '../../../shared/ui/TextInput';
+} from "../../../entities/master/api/masterApi"
+import { Button } from "../../../shared/ui/Button"
+import { DataTable } from "../../../shared/ui/DataTable"
+import { Modal } from "../../../shared/ui/Modal"
+import { TextInput } from "../../../shared/ui/TextInput"
+import styles from "./MastersTab.module.css"
 
-type MasterModalMode = 'create' | 'edit' | 'delete' | null;
+type MasterModalMode = "create" | "edit" | "delete" | null
 
 type CityOption = {
-  label: string;
-  value: number;
-};
+  label: string
+  value: number
+}
 
 type MasterFormValues = {
-  name: string;
-  ratingId: string;
-  cities: CityOption[];
-};
+  name: string
+  ratingId: string
+  cities: CityOption[]
+}
 
 function mapCitiesToOptions(cities: City[]): CityOption[] {
   return cities.map((city) => ({
     label: city.title,
     value: city.id,
-  }));
+  }))
 }
 
 function mapMasterCitiesToOptions(master: MasterOfCities): CityOption[] {
   return master.cities.map((city) => ({
     label: city.title,
     value: city.id,
-  }));
+  }))
 }
 
 export function MastersTab() {
-  const { data: masters = [], isLoading, isError } = useGetMastersQuery();
-  const { data: cities = [] } = useGetCitiesQuery();
-  const { data: ratings = [] } = useGetRatingsQuery();
-  const [createMaster, { isLoading: isCreating }] = useCreateMasterMutation();
-  const [updateMaster, { isLoading: isUpdating }] = useUpdateMasterMutation();
-  const [deleteMaster, { isLoading: isDeleting }] = useDeleteMasterMutation();
-  const [modalMode, setModalMode] = useState<MasterModalMode>(null);
-  const [selectedMaster, setSelectedMaster] = useState<MasterOfCities | null>(null);
-  const [modalError, setModalError] = useState('');
+  const { data: masters = [], isLoading, isError } = useGetMastersQuery()
+  const { data: cities = [] } = useGetCitiesQuery()
+  const { data: ratings = [] } = useGetRatingsQuery()
+  const [createMaster, { isLoading: isCreating }] = useCreateMasterMutation()
+  const [updateMaster, { isLoading: isUpdating }] = useUpdateMasterMutation()
+  const [deleteMaster, { isLoading: isDeleting }] = useDeleteMasterMutation()
+  const [modalMode, setModalMode] = useState<MasterModalMode>(null)
+  const [selectedMaster, setSelectedMaster] = useState<MasterOfCities | null>(null)
+  const [modalError, setModalError] = useState("")
 
-  const isMutating = isCreating || isUpdating || isDeleting;
-  const cityOptions = useMemo(() => mapCitiesToOptions(cities), [cities]);
+  const isMutating = isCreating || isUpdating || isDeleting
+  const cityOptions = useMemo(() => mapCitiesToOptions(cities), [cities])
 
   const {
     register,
@@ -65,135 +66,141 @@ export function MastersTab() {
     formState: { errors },
   } = useForm<MasterFormValues>({
     defaultValues: {
-      name: '',
-      ratingId: '',
+      name: "",
+      ratingId: "",
       cities: [],
     },
-  });
+  })
 
   const modalTitle = useMemo(() => {
-    if (modalMode === 'create') {
-      return 'Добавить мастера';
+    if (modalMode === "create") {
+      return "Добавить мастера"
     }
 
-    if (modalMode === 'edit') {
-      return 'Редактировать мастера';
+    if (modalMode === "edit") {
+      return "Редактировать мастера"
     }
 
-    if (modalMode === 'delete') {
-      return 'Удалить мастера';
+    if (modalMode === "delete") {
+      return "Удалить мастера"
     }
 
-    return '';
-  }, [modalMode]);
+    return ""
+  }, [modalMode])
 
   const openCreateModal = () => {
-    setModalMode('create');
-    setSelectedMaster(null);
-    setModalError('');
+    setModalMode("create")
+    setSelectedMaster(null)
+    setModalError("")
     reset({
-      name: '',
-      ratingId: '',
+      name: "",
+      ratingId: "",
       cities: [],
-    });
-  };
+    })
+  }
 
   const openEditModal = (master: MasterOfCities) => {
-    setModalMode('edit');
-    setSelectedMaster(master);
-    setModalError('');
+    setModalMode("edit")
+    setSelectedMaster(master)
+    setModalError("")
     reset({
       name: master.master_name,
       ratingId: String(master.master_rating),
       cities: mapMasterCitiesToOptions(master),
-    });
-  };
+    })
+  }
 
   const openDeleteModal = (master: MasterOfCities) => {
-    setModalMode('delete');
-    setSelectedMaster(master);
-    setModalError('');
-  };
+    setModalMode("delete")
+    setSelectedMaster(master)
+    setModalError("")
+  }
 
   const closeModal = () => {
     if (isMutating) {
-      return;
+      return
     }
 
-    setModalMode(null);
-    setSelectedMaster(null);
-    setModalError('');
+    setModalMode(null)
+    setSelectedMaster(null)
+    setModalError("")
     reset({
-      name: '',
-      ratingId: '',
+      name: "",
+      ratingId: "",
       cities: [],
-    });
-  };
+    })
+  }
 
   const onSubmit = async (values: MasterFormValues) => {
-    setModalError('');
+    setModalError("")
 
     try {
-      if (modalMode === 'create') {
+      if (modalMode === "create") {
         const created = await createMaster({
           newName: values.name.trim(),
           arr: values.cities.map((city) => city.value),
           rating_id: String(values.ratingId),
-        }).unwrap();
+        }).unwrap()
 
-        const createdMaster = created[0];
+        const createdMaster = created[0]
 
         if (!createdMaster) {
-          throw new Error('Empty create response');
+          throw new Error("Empty create response")
         }
 
-        closeModal();
-        return;
+        closeModal()
+        return
       }
 
-      if (modalMode === 'edit' && selectedMaster) {
+      if (modalMode === "edit" && selectedMaster) {
         await updateMaster({
           masterId: selectedMaster.master_id,
           newName: values.name.trim(),
           ratingId: Number(values.ratingId),
           arr: values.cities.map((city) => city.value),
-        }).unwrap();
+        }).unwrap()
 
-        closeModal();
+        closeModal()
       }
     } catch {
-      setModalError('Не удалось сохранить мастера. Попробуйте позже.');
+      setModalError("Не удалось сохранить мастера. Попробуйте позже.")
     }
-  };
+  }
 
   const handleDelete = async () => {
     if (!selectedMaster) {
-      return;
+      return
     }
 
-    setModalError('');
+    setModalError("")
 
     try {
-      await deleteMaster(selectedMaster.master_id).unwrap();
-      closeModal();
+      await deleteMaster(selectedMaster.master_id).unwrap()
+      closeModal()
     } catch {
-      setModalError('Не удалось удалить мастера. Попробуйте позже.');
+      setModalError("Не удалось удалить мастера. Попробуйте позже.")
     }
-  };
+  }
 
   if (isLoading) {
-    return <div className="dashboard-state">Загрузка мастеров...</div>;
+    return <div className={`dashboard-state ${styles.state}`}>Загрузка мастеров...</div>
   }
 
   if (isError) {
-    return <div className="dashboard-state dashboard-state--error">Не удалось загрузить мастеров.</div>;
+    return (
+      <div className={`dashboard-state dashboard-state--error ${styles.state} ${styles.stateError}`}>
+        Не удалось загрузить мастеров.
+      </div>
+    )
   }
 
   return (
     <>
-      <div className="dashboard-panel">
-        <div className="dashboard-toolbar">
-          <Button type="button" onClick={openCreateModal}>Добавить мастера</Button>
+      <div className={`dashboard-panel ${styles.panel}`}>
+        <div className={`dashboard-toolbar ${styles.toolbar}`}>
+          <Button className={styles.addButton} type="button" onClick={openCreateModal}>
+            Добавить мастера
+          </Button>
         </div>
 
         <DataTable
@@ -201,29 +208,37 @@ export function MastersTab() {
           getRowKey={(row) => row.master_id}
           columns={[
             {
-              key: 'name',
-              header: 'Name',
+              key: "name",
+              header: "Name",
               render: (row) => row.master_name,
             },
             {
-              key: 'city',
-              header: 'City',
-              render: (row) => row.cities[0]?.title ?? '—',
+              key: "city",
+              header: "City",
+              render: (row) => row.cities[0]?.title ?? "—",
             },
             {
-              key: 'rating',
-              header: 'Rating',
+              key: "rating",
+              header: "Rating",
               render: (row) => row.master_rating,
             },
             {
-              key: 'actions',
-              header: 'Actions',
+              key: "actions",
+              header: "Actions",
               render: (row) => (
-                <div className="table-actions">
-                  <button type="button" className="icon-button" onClick={() => openEditModal(row)}>
+                <div className={`table-actions ${styles.actions}`}>
+                  <button
+                    type="button"
+                    className={`icon-button ${styles.iconButton}`}
+                    onClick={() => openEditModal(row)}
+                  >
                     ✏️
                   </button>
-                  <button type="button" className="icon-button" onClick={() => openDeleteModal(row)}>
+                  <button
+                    type="button"
+                    className={`icon-button ${styles.iconButton}`}
+                    onClick={() => openDeleteModal(row)}
+                  >
                     🗑
                   </button>
                 </div>
@@ -234,34 +249,32 @@ export function MastersTab() {
       </div>
 
       <Modal title={modalTitle} isOpen={modalMode !== null} onClose={closeModal}>
-        {modalMode === 'delete' ? (
-          <>
-            <p>Удалить мастера {selectedMaster?.master_name}?</p>
-            {modalError ? <div className="modal-error">{modalError}</div> : null}
-            <div className="modal-actions">
-              <Button type="button" onClick={handleDelete} disabled={isMutating}>
-                {isDeleting ? 'Deleting...' : 'Yes'}
+        {modalMode === "delete" ? (
+          <div className={styles.modalContent}>
+            <p className={styles.message}>Удалить мастера {selectedMaster?.master_name}?</p>
+            {modalError ? <div className={styles.modalError}>{modalError}</div> : null}
+            <div className={styles.modalActions}>
+              <Button type="button" className={styles.primaryButton} onClick={handleDelete} disabled={isMutating}>
+                {isDeleting ? "Deleting..." : "Yes"}
               </Button>
-              <Button type="button" className="button button--secondary" onClick={closeModal} disabled={isMutating}>
+              <Button type="button" className={styles.secondaryButton} onClick={closeModal} disabled={isMutating}>
                 No
               </Button>
             </div>
-          </>
+          </div>
         ) : (
-          <form className="modal-form" onSubmit={handleSubmit(onSubmit)}>
+          <form className={styles.modalForm} onSubmit={handleSubmit(onSubmit)}>
             <div>
               <TextInput
+                className={styles.field}
                 placeholder="Имя мастера"
-                {...register('name', { required: 'Введите имя мастера.' })}
+                {...register("name", { required: "Введите имя мастера." })}
               />
-              {errors.name ? <div className="modal-error">{errors.name.message}</div> : null}
+              {errors.name ? <div className={styles.modalError}>{errors.name.message}</div> : null}
             </div>
 
             <div>
-              <select
-                className="form-control"
-                {...register('ratingId', { required: 'Выберите рейтинг.' })}
-              >
+              <select className={styles.field} {...register("ratingId", { required: "Выберите рейтинг." })}>
                 <option value="">Выберите рейтинг</option>
                 {ratings.map((rating) => (
                   <option key={rating.id} value={String(rating.id)}>
@@ -269,15 +282,15 @@ export function MastersTab() {
                   </option>
                 ))}
               </select>
-              {errors.ratingId ? <div className="modal-error">{errors.ratingId.message}</div> : null}
+              {errors.ratingId ? <div className={styles.modalError}>{errors.ratingId.message}</div> : null}
             </div>
 
-            <div>
+            <div className={styles.selectField}>
               <Controller
                 name="cities"
                 control={control}
                 rules={{
-                  validate: (value) => value.length > 0 || 'Выберите хотя бы один город.',
+                  validate: (value) => value.length > 0 || "Выберите хотя бы один город.",
                 }}
                 render={({ field }) => (
                   <Select
@@ -290,18 +303,16 @@ export function MastersTab() {
                   />
                 )}
               />
-              {errors.cities ? <div className="modal-error">{errors.cities.message}</div> : null}
+              {errors.cities ? <div className={styles.modalError}>{errors.cities.message}</div> : null}
             </div>
 
-            {modalError ? <div className="modal-error">{modalError}</div> : null}
+            {modalError ? <div className={styles.modalError}>{modalError}</div> : null}
 
-            <div className="modal-actions">
-              <Button type="submit" disabled={isMutating}>
-                {modalMode === 'create'
-                  ? isCreating ? 'Creating...' : 'Create'
-                  : isUpdating ? 'Saving...' : 'Save'}
+            <div className={styles.modalActions}>
+              <Button type="submit" className={styles.primaryButton} disabled={isMutating}>
+                {modalMode === "create" ? (isCreating ? "Creating..." : "Create") : isUpdating ? "Saving..." : "Save"}
               </Button>
-              <Button type="button" className="button button--secondary" onClick={closeModal} disabled={isMutating}>
+              <Button type="button" className={styles.primaryButton} onClick={closeModal} disabled={isMutating}>
                 Cancel
               </Button>
             </div>
@@ -309,5 +320,5 @@ export function MastersTab() {
         )}
       </Modal>
     </>
-  );
+  )
 }

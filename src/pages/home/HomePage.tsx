@@ -1,9 +1,13 @@
-﻿import { OrderForm } from '../../features/order-form/ui/OrderForm';
+import styles from "./HomePage.module.css"
+
+import { OrderForm } from "../../features/order-form/ui/OrderForm"
 
 export function HomePage() {
   return (
-    <section className="page">
-      <OrderForm />
+    <section className={`page ${styles.page}`}>
+      <div className={styles.content}>
+        <OrderForm />
+      </div>
     </section>
-  );
+  )
 }

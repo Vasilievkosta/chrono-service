@@ -1,108 +1,109 @@
-﻿import { useState } from 'react';
+import { useState } from "react"
 
-import { type Master, useGetAvailableMastersMutation } from '../../../entities/master/api/masterApi';
+import { type Master, useGetAvailableMastersMutation } from "../../../entities/master/api/masterApi"
 import {
   type OrderItem,
   useDeleteOrderMutation,
   useGetOrdersQuery,
   useUpdateOrderMutation,
-} from '../../../entities/order/api/orderApi';
-import { Button } from '../../../shared/ui/Button';
-import { DataTable } from '../../../shared/ui/DataTable';
-import { Modal } from '../../../shared/ui/Modal';
-import { formatDate, formatHour } from '../../order-form/lib/orderSchedule';
-import { OrderEditForm } from '../../order-form/ui/OrderEditForm';
-import { MasterSelectModal } from '../../order-form/ui/MasterSelectModal';
+} from "../../../entities/order/api/orderApi"
+import { Button } from "../../../shared/ui/Button"
+import { DataTable } from "../../../shared/ui/DataTable"
+import { Modal } from "../../../shared/ui/Modal"
+import { formatDate, formatHour } from "../../order-form/lib/orderSchedule"
+import { OrderEditForm } from "../../order-form/ui/OrderEditForm"
+import { MasterSelectModal } from "../../order-form/ui/MasterSelectModal"
+import styles from "./OrdersTab.module.css"
 
 type OrderEditValues = {
-  repairDate: Date;
-  repairTime: string;
-  watchSize: 'large' | 'medium' | 'small';
-};
-
-interface PendingOrderUpdate {
-  orderId: number;
-  userId: number;
-  cityId: number;
-  date: string;
-  time: string;
-  duration: number;
+  repairDate: Date
+  repairTime: string
+  watchSize: "large" | "medium" | "small"
 }
 
-const durationBySize: Record<OrderEditValues['watchSize'], number> = {
+interface PendingOrderUpdate {
+  orderId: number
+  userId: number
+  cityId: number
+  date: string
+  time: string
+  duration: number
+}
+
+const durationBySize: Record<OrderEditValues["watchSize"], number> = {
   large: 3,
   medium: 2,
   small: 1,
-};
+}
 
 function getOrderUserId(order: OrderItem) {
-  return order.user.id ?? order.user_id;
+  return order.user.id ?? order.user_id
 }
 
 function getOrderCityId(order: OrderItem) {
-  return order.city.id ?? order.city_id;
+  return order.city.id ?? order.city_id
 }
 
 export function OrdersTab() {
-  const { data = [], isLoading, isError } = useGetOrdersQuery();
-  const [getAvailableMasters, { isLoading: isLoadingMasters }] = useGetAvailableMastersMutation();
-  const [updateOrder, { isLoading: isUpdatingOrder }] = useUpdateOrderMutation();
-  const [deleteOrder, { isLoading: isDeletingOrder }] = useDeleteOrderMutation();
-  const [selectedOrder, setSelectedOrder] = useState<OrderItem | null>(null);
-  const [pendingOrder, setPendingOrder] = useState<PendingOrderUpdate | null>(null);
-  const [masters, setMasters] = useState<Master[]>([]);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [isMasterModalOpen, setIsMasterModalOpen] = useState(false);
-  const [submitError, setSubmitError] = useState('');
-  const [deleteError, setDeleteError] = useState('');
+  const { data = [], isLoading, isError } = useGetOrdersQuery()
+  const [getAvailableMasters, { isLoading: isLoadingMasters }] = useGetAvailableMastersMutation()
+  const [updateOrder, { isLoading: isUpdatingOrder }] = useUpdateOrderMutation()
+  const [deleteOrder, { isLoading: isDeletingOrder }] = useDeleteOrderMutation()
+  const [selectedOrder, setSelectedOrder] = useState<OrderItem | null>(null)
+  const [pendingOrder, setPendingOrder] = useState<PendingOrderUpdate | null>(null)
+  const [masters, setMasters] = useState<Master[]>([])
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [isMasterModalOpen, setIsMasterModalOpen] = useState(false)
+  const [submitError, setSubmitError] = useState("")
+  const [deleteError, setDeleteError] = useState("")
 
   const openEditModal = (order: OrderItem) => {
-    setSelectedOrder(order);
-    setSubmitError('');
-    setIsEditModalOpen(true);
-  };
+    setSelectedOrder(order)
+    setSubmitError("")
+    setIsEditModalOpen(true)
+  }
 
   const openDeleteModal = (order: OrderItem) => {
-    setSelectedOrder(order);
-    setDeleteError('');
-    setIsDeleteModalOpen(true);
-  };
+    setSelectedOrder(order)
+    setDeleteError("")
+    setIsDeleteModalOpen(true)
+  }
 
   const closeEditModal = () => {
     if (isLoadingMasters || isUpdatingOrder) {
-      return;
+      return
     }
 
-    setIsEditModalOpen(false);
-    setSelectedOrder(null);
-    setSubmitError('');
-  };
+    setIsEditModalOpen(false)
+    setSelectedOrder(null)
+    setSubmitError("")
+  }
 
   const closeDeleteModal = () => {
     if (isDeletingOrder) {
-      return;
+      return
     }
 
-    setIsDeleteModalOpen(false);
-    setSelectedOrder(null);
-    setDeleteError('');
-  };
+    setIsDeleteModalOpen(false)
+    setSelectedOrder(null)
+    setDeleteError("")
+  }
 
   const handleEditSubmit = async (values: OrderEditValues) => {
     if (!selectedOrder) {
-      return;
+      return
     }
 
-    const userId = getOrderUserId(selectedOrder);
-    const cityId = getOrderCityId(selectedOrder);
+    const userId = getOrderUserId(selectedOrder)
+    const cityId = getOrderCityId(selectedOrder)
 
     if (!userId || !cityId) {
-      setSubmitError('Не удалось определить пользователя или город заказа.');
-      return;
+      setSubmitError("Не удалось определить пользователя или город заказа.")
+      return
     }
 
-    setSubmitError('');
+    setSubmitError("")
 
     try {
       const payload = {
@@ -112,29 +113,29 @@ export function OrdersTab() {
         date: formatDate(values.repairDate),
         time: formatHour(values.repairTime),
         duration: durationBySize[values.watchSize],
-      };
+      }
 
       const availableMasters = await getAvailableMasters({
         cityId: String(payload.cityId),
         date: payload.date,
         time: payload.time,
         duration: payload.duration,
-      }).unwrap();
+      }).unwrap()
 
-      setPendingOrder(payload);
-      setMasters(availableMasters);
-      setIsMasterModalOpen(true);
+      setPendingOrder(payload)
+      setMasters(availableMasters)
+      setIsMasterModalOpen(true)
     } catch {
-      setSubmitError('Не удалось получить доступных мастеров. Попробуйте позже.');
+      setSubmitError("Не удалось получить доступных мастеров. Попробуйте позже.")
     }
-  };
+  }
 
   const handleSelectMaster = async (master: Master) => {
     if (!pendingOrder) {
-      return;
+      return
     }
 
-    setSubmitError('');
+    setSubmitError("")
 
     try {
       await updateOrder({
@@ -144,103 +145,115 @@ export function OrdersTab() {
         duration: pendingOrder.duration,
         user_id: pendingOrder.userId,
         master_id: master.id,
-      }).unwrap();
+      }).unwrap()
 
-      setIsMasterModalOpen(false);
-      setIsEditModalOpen(false);
-      setSelectedOrder(null);
-      setPendingOrder(null);
-      setMasters([]);
+      setIsMasterModalOpen(false)
+      setIsEditModalOpen(false)
+      setSelectedOrder(null)
+      setPendingOrder(null)
+      setMasters([])
     } catch {
-      setSubmitError('Не удалось обновить заказ. Попробуйте позже.');
+      setSubmitError("Не удалось обновить заказ. Попробуйте позже.")
     }
-  };
+  }
 
   const handleDeleteOrder = async () => {
     if (!selectedOrder) {
-      return;
+      return
     }
 
-    setDeleteError('');
+    setDeleteError("")
 
     try {
-      await deleteOrder(selectedOrder.id).unwrap();
-      setIsDeleteModalOpen(false);
-      setSelectedOrder(null);
+      await deleteOrder(selectedOrder.id).unwrap()
+      setIsDeleteModalOpen(false)
+      setSelectedOrder(null)
     } catch {
-      setDeleteError('Не удалось удалить заказ. Попробуйте позже.');
+      setDeleteError("Не удалось удалить заказ. Попробуйте позже.")
     }
-  };
+  }
 
   const closeMasterModal = () => {
     if (isUpdatingOrder) {
-      return;
+      return
     }
 
-    setIsMasterModalOpen(false);
-    setPendingOrder(null);
-    setMasters([]);
-  };
+    setIsMasterModalOpen(false)
+    setPendingOrder(null)
+    setMasters([])
+  }
 
   if (isLoading) {
-    return <div className="dashboard-state">Загрузка заказов...</div>;
+    return <div className={`dashboard-state ${styles.state}`}>Загрузка заказов...</div>
   }
 
   if (isError) {
-    return <div className="dashboard-state dashboard-state--error">Не удалось загрузить заказы.</div>;
+    return (
+      <div className={`dashboard-state dashboard-state--error ${styles.state} ${styles.stateError}`}>
+        Не удалось загрузить заказы.
+      </div>
+    )
   }
 
   return (
     <>
-      <div className="dashboard-panel">
+      <div className={`dashboard-panel ${styles.panel}`}>
         <DataTable
           rows={data}
           getRowKey={(row) => row.id}
           columns={[
             {
-              key: 'date',
-              header: 'Date',
+              key: "date",
+              header: "Date",
               render: (row) => row.date,
             },
             {
-              key: 'time',
-              header: 'Time',
+              key: "time",
+              header: "Time",
               render: (row) => row.time,
             },
             {
-              key: 'hours',
-              header: 'Hours',
+              key: "hours",
+              header: "Hours",
               render: (row) => row.duration,
             },
             {
-              key: 'user',
-              header: 'User',
+              key: "user",
+              header: "User",
               render: (row) => row.user.name,
             },
             {
-              key: 'email',
-              header: 'Email',
+              key: "email",
+              header: "Email",
               render: (row) => row.user.email,
             },
             {
-              key: 'master',
-              header: 'Master',
+              key: "master",
+              header: "Master",
               render: (row) => row.master.name,
             },
             {
-              key: 'city',
-              header: 'City',
+              key: "city",
+              header: "City",
               render: (row) => row.city.title,
             },
             {
-              key: 'actions',
-              header: 'Actions',
+              key: "actions",
+              header: "Actions",
               render: (row) => (
-                <div className="table-actions">
-                  <button type="button" className="icon-button" onClick={() => openEditModal(row)}>
+                <div className={`table-actions ${styles.actions}`}>
+                  <button
+                    type="button"
+                    className={`icon-button ${styles.iconButton}`}
+                    onClick={() => openEditModal(row)}
+                  >
                     ✏️
                   </button>
-                  <button type="button" className="icon-button" onClick={() => openDeleteModal(row)}>
+                  <button
+                    type="button"
+                    className={`icon-button ${styles.iconButton}`}
+                    onClick={() => openDeleteModal(row)}
+                  >
                     🗑
                   </button>
                 </div>
@@ -264,11 +277,11 @@ export function OrdersTab() {
       <Modal title="Удалить заказ" isOpen={isDeleteModalOpen && !!selectedOrder} onClose={closeDeleteModal}>
         {selectedOrder ? (
           <>
-            <p>Вы точно хотите удалить заказ пользователя {selectedOrder.user.name}?</p>
-            {deleteError ? <div className="modal-error">{deleteError}</div> : null}
-            <div className="modal-actions">
+            <p className={styles.message}>Вы точно хотите удалить заказ пользователя {selectedOrder.user.name}?</p>
+            {deleteError ? <div className={`modal-error ${styles.modalError}`}>{deleteError}</div> : null}
+            <div className={`modal-actions ${styles.modalActions}`}>
               <Button type="button" onClick={handleDeleteOrder} disabled={isDeletingOrder}>
-                {isDeletingOrder ? 'Deleting...' : 'Yes'}
+                {isDeletingOrder ? "Deleting..." : "Yes"}
               </Button>
               <Button
                 type="button"
@@ -291,5 +304,5 @@ export function OrdersTab() {
         onSelect={handleSelectMaster}
       />
     </>
-  );
+  )
 }

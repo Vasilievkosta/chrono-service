@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   --space-xxs: 4px;
   --space-xs: 8px;
   --space-sm: 12px;
@@ -13,5 +13,5 @@
   --radius-xl: 24px;
   --radius-pill: 999px;
 
-  --font-family-base: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  --font-family-base: "Segoe UI", Arial, sans-serif;
 }
