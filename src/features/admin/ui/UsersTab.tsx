@@ -8,7 +8,7 @@ import {
   useGetUsersQuery,
   useUpdateUserMutation,
 } from "../../../entities/user/api/userApi"
-import { Button } from "../../../shared/ui/Button"
+import { Button } from "../../../shared/ui/button/Button"
 import { DataTable } from "../../../shared/ui/DataTable"
 import { Modal } from "../../../shared/ui/Modal"
 import { TextInput } from "../../../shared/ui/TextInput"

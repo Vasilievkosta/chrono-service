@@ -11,7 +11,7 @@ import {
   useGetRatingsQuery,
   useUpdateMasterMutation,
 } from "../../../entities/master/api/masterApi"
-import { Button } from "../../../shared/ui/Button"
+import { Button } from "../../../shared/ui/button/Button"
 import { DataTable } from "../../../shared/ui/DataTable"
 import { Modal } from "../../../shared/ui/Modal"
 import { TextInput } from "../../../shared/ui/TextInput"
@@ -198,7 +198,7 @@ export function MastersTab() {
     <>
       <div className={`dashboard-panel ${styles.panel}`}>
         <div className={`dashboard-toolbar ${styles.toolbar}`}>
-          <Button className={styles.addButton} type="button" onClick={openCreateModal}>
+          <Button type="button" onClick={openCreateModal}>
             Добавить мастера
           </Button>
         </div>
@@ -227,20 +227,17 @@ export function MastersTab() {
               header: "Actions",
               render: (row) => (
                 <div className={`table-actions ${styles.actions}`}>
-                  <button
-                    type="button"
-                    className={`icon-button ${styles.iconButton}`}
-                    onClick={() => openEditModal(row)}
-                  >
+                  <Button variant="icon" type="button" className={styles.iconButton} onClick={() => openEditModal(row)}>
                     ✏️
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant="icon"
                     type="button"
-                    className={`icon-button ${styles.iconButton}`}
+                    className={styles.iconButton}
                     onClick={() => openDeleteModal(row)}
                   >
                     🗑
-                  </button>
+                  </Button>
                 </div>
               ),
             },
@@ -254,10 +251,10 @@ export function MastersTab() {
             <p className={styles.message}>Удалить мастера {selectedMaster?.master_name}?</p>
             {modalError ? <div className={styles.modalError}>{modalError}</div> : null}
             <div className={styles.modalActions}>
-              <Button type="button" className={styles.primaryButton} onClick={handleDelete} disabled={isMutating}>
+              <Button type="button" onClick={handleDelete} disabled={isMutating}>
                 {isDeleting ? "Deleting..." : "Yes"}
               </Button>
-              <Button type="button" className={styles.secondaryButton} onClick={closeModal} disabled={isMutating}>
+              <Button variant="secondary" type="button" onClick={closeModal} disabled={isMutating}>
                 No
               </Button>
             </div>
@@ -309,10 +306,10 @@ export function MastersTab() {
             {modalError ? <div className={styles.modalError}>{modalError}</div> : null}
 
             <div className={styles.modalActions}>
-              <Button type="submit" className={styles.primaryButton} disabled={isMutating}>
+              <Button type="submit" disabled={isMutating}>
                 {modalMode === "create" ? (isCreating ? "Creating..." : "Create") : isUpdating ? "Saving..." : "Save"}
               </Button>
-              <Button type="button" className={styles.primaryButton} onClick={closeModal} disabled={isMutating}>
+              <Button variant="secondary" type="button" onClick={closeModal} disabled={isMutating}>
                 Cancel
               </Button>
             </div>

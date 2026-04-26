@@ -1,16 +1,18 @@
-﻿import { zodResolver } from "@hookform/resolvers/zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 import { useEffect } from "react"
 import { z } from "zod"
 
 import type { OrderItem } from "../../../entities/order/api/orderApi"
-import { Button } from "../../../shared/ui/Button"
-import { DatePickerField } from "../../../shared/ui/DatePickerField"
+import { Button } from "../../../shared/ui/button/Button"
+import { DatePickerField } from "../../../shared/ui/date-picker/DatePickerField"
 import { FormField } from "../../../shared/ui/FormField"
-import { RadioGroup } from "../../../shared/ui/RadioGroup"
+import { RadioGroup } from "../../../shared/ui/radio-group/RadioGroup"
 import { SelectField } from "../../../shared/ui/SelectField"
 import { timeOptions } from "../lib/orderSchedule"
 import { watchSizes } from "../model/orderFormSchema"
+import styles from "./OrderEditForm.module.css"
+import s from "./OrderForm.module.css"
 
 const watchSizeLabels: Record<(typeof watchSizes)[number], string> = {
   large: "Большие",
@@ -79,24 +81,24 @@ export function OrderEditForm({ order, isSubmitting, submitError, onSubmit }: Or
   }, [order, reset])
 
   return (
-    <form className="modal-form" onSubmit={handleSubmit(onSubmit)}>
-      <div className="readonly-block">
+    <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+      <div className={styles.readonlyBlock}>
         <strong>Пользователь</strong>
         <div>{order.user.name}</div>
         <div>{order.user.email}</div>
       </div>
 
-      <div className="readonly-block">
+      <div className={styles.readonlyBlock}>
         <strong>Текущий мастер</strong>
         <div>{order.master.name}</div>
       </div>
 
-      <div className="readonly-block">
+      <div className={styles.readonlyBlock}>
         <strong>Город</strong>
         <div>{order.city.title}</div>
       </div>
 
-      <div className="dashboard-state">При изменении полей ниже, потребуется выбрать мастера заново.</div>
+      <div className={styles.notice}>При изменении полей ниже, потребуется выбрать мастера заново.</div>
 
       <FormField label="Дата" error={errors.repairDate?.message} required>
         <Controller
@@ -109,7 +111,7 @@ export function OrderEditForm({ order, isSubmitting, submitError, onSubmit }: Or
       </FormField>
 
       <FormField label="Время" error={errors.repairTime?.message} required>
-        <SelectField {...register("repairTime")}>
+        <SelectField className={`form-control ${s.input}`} {...register("repairTime")}>
           <option value="">Выберите время</option>
           {timeOptions.map((time) => (
             <option key={time.value} value={time.value}>
@@ -137,9 +139,9 @@ export function OrderEditForm({ order, isSubmitting, submitError, onSubmit }: Or
         />
       </FormField>
 
-      {submitError ? <div className="modal-error">{submitError}</div> : null}
+      {submitError ? <div className={styles.error}>{submitError}</div> : null}
 
-      <div className="modal-actions">
+      <div className={styles.actions}>
         <Button type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Ищем мастеров..." : "Save"}
         </Button>

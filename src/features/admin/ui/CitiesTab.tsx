@@ -7,7 +7,7 @@ import {
   useGetCitiesQuery,
   useUpdateCityMutation,
 } from "../../../entities/city/api/cityApi"
-import { Button } from "../../../shared/ui/Button"
+import { Button } from "../../../shared/ui/button/Button"
 import { DataTable } from "../../../shared/ui/DataTable"
 import { Modal } from "../../../shared/ui/Modal"
 import { TextInput } from "../../../shared/ui/TextInput"
@@ -152,20 +152,12 @@ export function CitiesTab() {
               header: "Actions",
               render: (row) => (
                 <div className={`table-actions ${styles.actions}`}>
-                  <button
-                    type="button"
-                    className={`icon-button ${styles.iconButton}`}
-                    onClick={() => openEditModal(row)}
-                  >
+                  <Button variant="icon" type="button" className={styles.iconButton} onClick={() => openEditModal(row)}>
                     ✏️
-                  </button>
-                  <button
-                    type="button"
-                    className={`icon-button ${styles.iconButton}`}
-                    onClick={() => openDeleteModal(row)}
-                  >
+                  </Button>
+                  <Button variant="icon" type="button" className={styles.iconButton} onClick={() => openDeleteModal(row)}>
                     🗑
-                  </button>
+                  </Button>
                 </div>
               ),
             },
@@ -195,7 +187,7 @@ export function CitiesTab() {
               <Button type="button" onClick={handleConfirm} disabled={isMutating}>
                 {isCreating ? "Creating..." : "Create"}
               </Button>
-              <Button type="button" className="button button--secondary" onClick={closeModal} disabled={isMutating}>
+              <Button variant="secondary" type="button" onClick={closeModal} disabled={isMutating}>
                 Cancel
               </Button>
             </>
@@ -206,7 +198,7 @@ export function CitiesTab() {
               <Button type="button" onClick={handleConfirm} disabled={isMutating}>
                 {isUpdating ? "Saving..." : "Save"}
               </Button>
-              <Button type="button" className="button button--secondary" onClick={closeModal} disabled={isMutating}>
+              <Button variant="secondary" type="button" onClick={closeModal} disabled={isMutating}>
                 Cancel
               </Button>
             </>
@@ -217,7 +209,7 @@ export function CitiesTab() {
               <Button type="button" onClick={handleConfirm} disabled={isMutating}>
                 {isDeleting ? "Deleting..." : "Yes"}
               </Button>
-              <Button type="button" className="button button--secondary" onClick={closeModal} disabled={isMutating}>
+              <Button variant="secondary" type="button" onClick={closeModal} disabled={isMutating}>
                 No
               </Button>
             </>

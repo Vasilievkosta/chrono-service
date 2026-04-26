@@ -3,7 +3,7 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 
-import { Button } from "../../../shared/ui/Button"
+import { Button } from "../../../shared/ui/button/Button"
 import { FormField } from "../../../shared/ui/FormField"
 import { TextInput } from "../../../shared/ui/TextInput"
 import { setAuth } from "../../../shared/lib/auth"

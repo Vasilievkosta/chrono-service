@@ -1,5 +1,6 @@
 import type { PropsWithChildren } from "react"
 
+import { Button } from "./button/Button"
 import styles from "./Modal.module.css"
 
 interface ModalProps extends PropsWithChildren {
@@ -19,9 +20,9 @@ export function Modal({ title, isOpen, onClose, children }: ModalProps) {
       <div className={`modal__content ${styles.content}`}>
         <div className={`modal__header ${styles.header}`}>
           <h3 className={styles.title}>{title}</h3>
-          <button type="button" className={`modal__close ${styles.close}`} onClick={onClose}>
-            Закрыть
-          </button>
+          <Button variant="close" type="button" className={`modal__close ${styles.close}`} onClick={onClose}>
+            &#10006;
+          </Button>
         </div>
         <div className={`modal__body ${styles.body}`}>{children}</div>
       </div>

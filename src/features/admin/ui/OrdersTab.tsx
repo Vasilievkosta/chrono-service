@@ -7,7 +7,7 @@ import {
   useGetOrdersQuery,
   useUpdateOrderMutation,
 } from "../../../entities/order/api/orderApi"
-import { Button } from "../../../shared/ui/Button"
+import { Button } from "../../../shared/ui/button/Button"
 import { DataTable } from "../../../shared/ui/DataTable"
 import { Modal } from "../../../shared/ui/Modal"
 import { formatDate, formatHour } from "../../order-form/lib/orderSchedule"
@@ -242,20 +242,12 @@ export function OrdersTab() {
               header: "Actions",
               render: (row) => (
                 <div className={`table-actions ${styles.actions}`}>
-                  <button
-                    type="button"
-                    className={`icon-button ${styles.iconButton}`}
-                    onClick={() => openEditModal(row)}
-                  >
+                  <Button variant="icon" type="button" className={styles.iconButton} onClick={() => openEditModal(row)}>
                     ✏️
-                  </button>
-                  <button
-                    type="button"
-                    className={`icon-button ${styles.iconButton}`}
-                    onClick={() => openDeleteModal(row)}
-                  >
+                  </Button>
+                  <Button variant="icon" type="button" className={styles.iconButton} onClick={() => openDeleteModal(row)}>
                     🗑
-                  </button>
+                  </Button>
                 </div>
               ),
             },
@@ -278,17 +270,12 @@ export function OrdersTab() {
         {selectedOrder ? (
           <>
             <p className={styles.message}>Вы точно хотите удалить заказ пользователя {selectedOrder.user.name}?</p>
-            {deleteError ? <div className={`modal-error ${styles.modalError}`}>{deleteError}</div> : null}
-            <div className={`modal-actions ${styles.modalActions}`}>
+            {deleteError ? <div className={styles.modalError}>{deleteError}</div> : null}
+            <div className={styles.modalActions}>
               <Button type="button" onClick={handleDeleteOrder} disabled={isDeletingOrder}>
                 {isDeletingOrder ? "Deleting..." : "Yes"}
               </Button>
-              <Button
-                type="button"
-                className="button button--secondary"
-                onClick={closeDeleteModal}
-                disabled={isDeletingOrder}
-              >
+              <Button variant="secondary" type="button" onClick={closeDeleteModal} disabled={isDeletingOrder}>
                 No
               </Button>
             </div>
