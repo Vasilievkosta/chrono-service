@@ -1,24 +1,22 @@
-﻿import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+﻿import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 
-import { TOKEN_STORAGE } from '../lib/auth';
+import { TOKEN_STORAGE } from "../lib/auth"
 
 export const baseApi = createApi({
-  reducerPath: 'api',
+  reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:5000',
-	// baseUrl: 'https://render-clock.onrender.com',
+    // baseUrl: 'http://localhost:5000',
+    baseUrl: "https://render-clock.onrender.com",
     prepareHeaders: (headers) => {
-      const token = typeof window === 'undefined'
-        ? null
-        : localStorage.getItem(TOKEN_STORAGE);
+      const token = typeof window === "undefined" ? null : localStorage.getItem(TOKEN_STORAGE)
 
       if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
+        headers.set("Authorization", `Bearer ${token}`)
       }
 
-      return headers;
+      return headers
     },
   }),
-  tagTypes: ['City', 'Master', 'User', 'Order'],
+  tagTypes: ["City", "Master", "User", "Order"],
   endpoints: () => ({}),
-});
+})
